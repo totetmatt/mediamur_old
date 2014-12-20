@@ -1,0 +1,6 @@
+twitter.OAuthConsumerKey=
+twitter.OAuthConsumerSecret=
+twitter.OAuthAccessToken=
+twitter.OAuthAccessTokenSecret=
+
+server.port = 8080
