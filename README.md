@@ -4,7 +4,8 @@ Server & Simple Html Client to display media from a Twitter Stream.
 #How to ?
 ## Working in local
 ###Run the Server
-Grab the Mediamur jar at [http://matthieu-totet.fr/release/mediamur/mediamur-0.0.1-RELEASE.jar](http://matthieu-totet.fr/release/mediamur/mediamur-0.0.1-RELEASE.jar "http://matthieu-totet.fr/release/mediamur/mediamur-0.0.1-RELEASE.jar") or build it.
+Grab the Mediamur jar at [http://matthieu-totet.fr/release/mediamur/mediamur.zip](http://matthieu-totet.fr/release/mediamur/mediamur.zip "http://matthieu-totet.fr/release/mediamur/mediamur.zip") or build it.
+
 
 Launch it throught the command `java -jar mediamur-0.0.1-RELEASE.jar`
 
