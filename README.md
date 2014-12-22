@@ -8,6 +8,8 @@ Grab the Mediamur jar at [http://matthieu-totet.fr/release/mediamur/mediamur-0.0
 
 Launch it throught the command `java -jar mediamur-0.0.1-RELEASE.jar`
 
+The in-the-box configuration doesn't have stream filter and will use the sample stream api from twitter. Check the **streamquery.yml** part bellow to see how to have a filtered stream.
+
 It should have open a websocket entrypoint accessible at `http://localhost:8080/mediastream`
 
 
