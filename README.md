@@ -52,3 +52,6 @@ Just make sure that in this line in the `index.html `:
     socket = new WebSocket("<url>");
 
 the `<url>` target the server that you launched. ( `http://<yourHostName>:8080/mediastream` e.g )
+
+#Dockerized version
+See [https://github.com/totetmatt/mediamur-docker](https://github.com/totetmatt/mediamur-docker)
