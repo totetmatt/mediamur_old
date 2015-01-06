@@ -2,6 +2,9 @@ package mediamur;
 
 import javax.servlet.ServletContext;
 
+import mediamur.endpoint.UserWsEndpoint;
+import mediamur.endpoint.MediaWsEndpoint;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +19,13 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 public class WebsocketSpringBootConfigurator {
 
     @Bean
-    public WebsocketEndpoint echoEndpoint() {
-        return new WebsocketEndpoint();
+    public MediaWsEndpoint echoEndpoint() {
+        return new MediaWsEndpoint();
     }
-
+    @Bean
+    public UserWsEndpoint echoEndpointw() {
+        return new UserWsEndpoint();
+    }
     @Bean
     public ServletContextAware endpointExporterInitializer(final ApplicationContext applicationContext) {
         return new ServletContextAware() {
