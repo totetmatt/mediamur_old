@@ -16,9 +16,17 @@
 		// Image score to make it bigger, will be reseted at each page reload ;)
 		var imageScore = {};
 
-		window.onload = function() {
-			socket = new WebSocket("ws://localhost:8080/mediastream");
-			socket.binaryType = "arraybuffer";
+		//
+		function changeStream() {
+			// console.log(document.getElementById('streamId').value);
+			document.getElementById("wrapper").innerHTML = '';
+			socket.close();
+			startWebsocket();
+		}
+
+		//
+		function startWebsocket() {
+			socket = new WebSocket(document.getElementById('streamId').value);
 			socket.onopen = function() {
 				console.log("Connected!");
 			}
@@ -37,26 +45,26 @@
 			}
 			socket.onclose = function(e) {
 				console.log("Connection closed.");
-				socket = null;
 			}
 		};
 
+		window.onload = startWebsocket
 	</script>
 </head>
 <body>
 	<div class="container">
 		<header>
-			<!-- <a class="logo" href="http://minimalcss.com">Minimal CSS Template</a>-->
-			<nav class="float-right">
-				<ul>
-					
-				</ul>
-			</nav>
+			
+			<select onChange="changeStream();" id="streamId">
+				<option value="ws://localhost:8080/media">Media Stream</option>
+				<option value="ws://localhost:8080/user">User Stream</option>
+			</select> 
+				
 		</header>
 		<div class="row"><div class="col-12" id="wrapper"></div></div>
 		<footer>
 			Mediamur from <a href="">@totetmatt</a> |  <!-- Not required, but appreciated. -->Design <a href="http://minimalcss.com">Minimal</a>
-		</footer><!-- footer -->
+		</footer>
 	</div>
 </body>
 </html>
