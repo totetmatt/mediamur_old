@@ -16,6 +16,9 @@
 		// Image score to make it bigger, will be reseted at each page reload ;)
 		var imageScore = {};
 
+		// Keep track for data, when changing stream, can resume
+		// Pro : Quick and simple. Drawback : shuffled
+		var imageDb = {};
 		//
 		function changeStream() {
 			// console.log(document.getElementById('streamId').value);
@@ -26,7 +29,18 @@
 
 		//
 		function startWebsocket() {
-			socket = new WebSocket(document.getElementById('streamId').value);
+			var streamUrl = document.getElementById('streamId').value
+			socket = new WebSocket(streamUrl);
+			if(imageDb[streamUrl] === undefined) {
+				imageDb[streamUrl]={};
+			} else {
+				for( element in imageDb[streamUrl]){
+					data = imageDb[streamUrl][element];
+					document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+data['url']+'"><img id="'+data['hash']+'" src="'+data['url']+'"/></a>');
+					document.getElementById(data['hash']).style.height = 100+(imageScore[data['hash']] *10)+"px"
+					document.getElementById(data['hash']).style.width = 100+(imageScore[data['hash']] *10)+"px"
+				}
+			}
 			socket.onopen = function() {
 				console.log("Connected!");
 			}
@@ -34,8 +48,9 @@
 
 				var data = JSON.parse(e.data);
 				if(imageScore[data['hash']]  === undefined) {
+					imageDb[streamUrl][data['hash']] = data;
 					imageScore[data['hash']] = 0;
-					document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+data['url']+'"><img alt="'+data['hash']+' [=] '+data['id']+'" id="'+data['hash']+'" src="'+data['url']+'"/></a>')
+					document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+data['url']+'"><img id="'+data['hash']+'" src="'+data['url']+'"/></a>')
 				} else {
 					document.getElementById(data['hash']).style.height = 100+(imageScore[data['hash']] *10)+"px"
 					document.getElementById(data['hash']).style.width = 100+(imageScore[data['hash']] *10)+"px"
