@@ -66,12 +66,13 @@ public class UserWsEndpoint implements StatusListener {
 	}
 
 
-	public void onStatus(Status arg0) {
+	public void onStatus(Status status) {
 		for (Session s : UserWsEndpoint.getSessions()) {
 			ImageData d = new ImageData();
-			d.setId(arg0.getUser().getScreenName());
-			d.setHash(arg0.getUser().getOriginalProfileImageURL());
-			d.setUrl(arg0.getUser().getOriginalProfileImageURL());
+			d.setId(status.getUser().getScreenName());
+			d.setHash(status.getUser().getOriginalProfileImageURL());
+			d.setUrl(status.getUser().getOriginalProfileImageURL());
+			d.setLabel(status.getUser().getScreenName());
 			ObjectMapper mapper = new ObjectMapper();
 			String value;
 			try {
@@ -80,14 +81,16 @@ public class UserWsEndpoint implements StatusListener {
 			} catch (JsonProcessingException e) {
 				log.error(e);
 			}
-			if (arg0.getRetweetedStatus() != null) {
+			if (status.getRetweetedStatus() != null) {
 
 				d = new ImageData();
-				d.setId(arg0.getRetweetedStatus().getUser().getScreenName());
-				d.setHash(arg0.getRetweetedStatus().getUser()
+				d.setId(status.getRetweetedStatus().getUser().getScreenName());
+				d.setHash(status.getRetweetedStatus().getUser()
 						.getOriginalProfileImageURL());
-				d.setUrl(arg0.getRetweetedStatus().getUser()
+				d.setUrl(status.getRetweetedStatus().getUser()
 						.getOriginalProfileImageURL());
+				d.setLabel(status.getRetweetedStatus().getUser()
+						.getScreenName());
 				mapper = new ObjectMapper();
 				try {
 					value = mapper.writeValueAsString(d);

@@ -78,8 +78,8 @@ public class MediaWsEndpoint implements StatusListener {
 				.openStream());
 	}
 
-	public void onStatus(Status arg0) {
-		for (MediaEntity me : arg0.getMediaEntities()) {
+	public void onStatus(Status status) {
+		for (MediaEntity me : status.getMediaEntities()) {
 			if (!urlHash.containsKey(me.getMediaURL())) {
 				try {
 					urlHash.put(me.getMediaURL(), imhash(me.getMediaURL()));
@@ -94,6 +94,7 @@ public class MediaWsEndpoint implements StatusListener {
 				d.setUrl(me.getMediaURL());
 				d.setHash(urlHash.get(me.getMediaURL()));
 				d.setId(me.getId() + "");
+				d.setLabel(status.getText());
 				ObjectMapper mapper = new ObjectMapper();
 				String value;
 				try {

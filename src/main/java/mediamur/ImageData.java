@@ -8,7 +8,15 @@ public class ImageData {
 	String url;
 	String id;
 	String hash;
+	String label;
 	
+	
+	public String getLabel() {
+		return label;
+	}
+	public void setLabel(String label) {
+		this.label = label;
+	}
 	public String getUrl() {
 		return url;
 	}
