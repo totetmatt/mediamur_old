@@ -18,8 +18,8 @@
 		var imageDb = {};
 
 		var availableStream = [
-								{"name":"Media Stream","url":"ws://localhost:8080/media"},
-								{"name":"User Stream","url": "ws://localhost:8080/user"}
+								{"name":"Media Stream","url":"ws://localhost:8089/media"},
+								{"name":"User Stream","url": "ws://localhost:8089/user"}
 							  ]
 		var currentStream = availableStream[0]['url']
 		// Socket  
@@ -27,9 +27,13 @@
 		var pauseMode = false;
 		var pauseBuffer = [];
 
-		var filterLimit = 5;
+		var scoreLimit;
 
-		var sizeStep = screen.width/100;
+		var sizeStep = (screen.width-50)/100;
+	    function updateScoreLimit() {
+
+			scoreLimit = Math.max(1,document.getElementById('limitScore').value)
+	    }
 		//
 		function triggerPauseMode(){
 			// If we click to desactivate the Pause Mode
@@ -69,8 +73,8 @@
 		
 		function pushMedia(mediaData) {
 			if(document.getElementById(mediaData['hash']) === null) {
-				if(imageScore[mediaData['hash']] >= filterLimit) {
-				document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><img alt="'+mediaData['label']+'"  id="'+mediaData['hash']+'" src="'+mediaData['url']+'"/></a>');
+				if(imageScore[mediaData['hash']] >= scoreLimit) {
+				document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><img title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'" src="'+mediaData['url']+'"/></a>');
 				}
 				
 			}
@@ -79,7 +83,7 @@
 		function sizeMedia(mediaData) {
 			if(document.getElementById(mediaData['hash']) !== null) {
 
-				var size = Math.min(screen.width*0.90, imageScore[mediaData['hash']] *sizeStep);
+				var size = Math.min(screen.width*0.95, 50+ (imageScore[mediaData['hash']] *sizeStep));
 
 				document.getElementById(mediaData['hash']).style.height = size+"px"
 				document.getElementById(mediaData['hash']).style.width = size+"px"
@@ -110,7 +114,7 @@
 		}
 
 		function startStreams() {
-			
+			updateScoreLimit();
 			for(var i=0;i<availableStream.length;i++) {
 				
 				var stream = availableStream[i];
@@ -179,7 +183,8 @@
 				<option value="ws://localhost:8080/media">Media Stream</option>
 				<option value="ws://localhost:8080/user">User Stream</option>
 			</select> 
-				<input type="checkbox" id="isPause" value="Pause on Hover" onclick="triggerPauseMode()"> Pause on Hover
+				<input type="checkbox" id="isPause" value="Pause on Hover" onclick="triggerPauseMode()"/> Pause on Hover |
+				<input type="text" id="limitScore" value="5" size="2" onChange="updateScoreLimit()" /> Score Limit
 		</header>
 		<div class="row"><div class="col-12" id="wrapper" onmouseover="pause()" ></div></div>
 		<footer>
