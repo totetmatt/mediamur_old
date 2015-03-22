@@ -1,0 +1,22 @@
+upstream websocket {
+	server mediamur-backend:8080;
+}
+
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	root /var/www/html;
+	index index.html;
+	server_name _;
+	
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	
+	location /mediastream {
+		proxy_pass http://websocket;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
+	}
+}
