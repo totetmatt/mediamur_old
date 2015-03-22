@@ -1,5 +1,5 @@
 upstream websocket {
-	server mediamur-backend:8080;
+	server backend:8080;
 }
 
 server {
