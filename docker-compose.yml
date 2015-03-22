@@ -1,0 +1,23 @@
+mediamur-frontend:
+  image: totetmatt/mediamur-frontend
+  ports:
+    - "8080:80"
+  links:
+    - mediamur-backend:mediamur-backend
+  volumes_from:
+    - mediamur-backend
+  environment:
+    TWITTER_OAUTHCONSUMERKEY:<yourOauthConsumerKey>
+    TWITTER_OAUTHCONSUMERSECRET:<yourOauthConsumerSecret>
+    TWITTER_OAUTHACCESSTOKEN:<yourOauthAccessToken>
+    TWITTER_OAUTHACCESSTOKENSECRET:<yourOauthAccessTokenSecret>
+    STREAM_WORDS:""
+    STREAM_USERS:""
+    STREAM_LOCATIONS:""
+    
+mediamur-backend:
+  image: totetmatt/mediamur-backend
+  ports:
+    - 8080
+
+
