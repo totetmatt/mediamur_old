@@ -16,11 +16,12 @@
 		// Keep track for data, when changing stream, can resume
 		// Pro : Quick and simple. Drawback : shuffled ?
 		var imageDb = {};
-
+		var streamRootEnpoint = "ws://"+window.location.hostname+":"+window.location.port;
 		var availableStream = [
-								{"name":"Media Stream","url":"ws://localhost:8089/media"},
-								{"name":"User Stream","url": "ws://localhost:8089/user"}
-							  ]
+								{"name":"Media Stream","url":streamRootEnpoint+"/media"},
+								{"name":"User Stream","url": streamRootEnpoint+"/user"}
+							  ];
+
 		var currentStream = availableStream[0]['url']
 		// Socket  
 		var socket = null;
@@ -30,6 +31,32 @@
 		var scoreLimit;
 
 		var sizeStep = (screen.width-50)/100;
+		
+		function buildOption() {
+			var selectElement = document.getElementById("streamId");
+			
+			for(var i=0; i < availableStream.length;i++) {
+				var stream = availableStream[i]
+				var option = document.createElement("option");
+				option.text = stream['name'];
+				option.value= stream['url'];
+				selectElement.add(option);
+			}
+			
+		}
+		
+		function buildOption() {
+			var selectElement = document.getElementById("streamId");
+			
+			for(var i=0; i < availableStream.length;i++) {
+				var stream = availableStream[i]
+				var option = document.createElement("option");
+				option.text = stream['name'];
+				option.value= stream['url'];
+				selectElement.add(option);
+			}
+			
+		}
 	    function updateScoreLimit() {
 
 			scoreLimit = Math.max(1,document.getElementById('limitScore').value)
@@ -62,7 +89,7 @@
 		
 			document.getElementById("wrapper").innerHTML = '';
 			currentStream = document.getElementById('streamId').value;
-			
+			console.log(currentStream)
 		}
 		function socketOnOpen() {
 			console.log("Connected to "+ this.url)
@@ -114,6 +141,7 @@
 		}
 
 		function startStreams() {
+			buildOption()
 			updateScoreLimit();
 			for(var i=0;i<availableStream.length;i++) {
 				
@@ -170,7 +198,7 @@
 				console.log("Connection closed.");
 			}
 		};
-
+	
 		// window.onload = startWebsocket
 		window.onload = startStreams
 	</script>
@@ -180,8 +208,7 @@
 		<header  onmouseover="unpause()" >
 			
 			<select onChange="changeStream();" id="streamId">
-				<option value="ws://localhost:8080/media">Media Stream</option>
-				<option value="ws://localhost:8080/user">User Stream</option>
+			
 			</select> 
 				<input type="checkbox" id="isPause" value="Pause on Hover" onclick="triggerPauseMode()"/> Pause on Hover |
 				<input type="text" id="limitScore" value="5" size="2" onChange="updateScoreLimit()" /> Score Limit
