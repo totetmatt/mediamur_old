@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.webcom</groupId>
 	<artifactId>mediamur</artifactId>
-	<version>0.0.1-RELEASE</version>
+	<version>0.1.1-RELEASE</version>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.2.0.RELEASE</version>
+		<version>1.2.2.RELEASE</version>
 	</parent>
 
 
