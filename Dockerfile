@@ -12,5 +12,4 @@ COPY application.properties.sample /data/application.properties
 COPY streamquery.yml /data/streamquery.yml
 COPY html/index.html /var/www/html/index.html
 COPY html/minimal.css /var/www/html/minimal.css
-RUN chmod -R 644 /data
-ENTRYPOINT /data/init.sh
+RUN chmod +x /data/init.sh
