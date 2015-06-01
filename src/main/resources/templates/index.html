@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Mediamur :: </title>
+	<meta name="description" content="">
+
+	<link href="minimal.css" rel="stylesheet">
+	<script type="text/javascript">
+
+		// Image score to make it bigger, will be reseted at each page reload ;)
+		var imageScore = {};
+
+		// Keep track for data, when changing stream, can resume
+		// Pro : Quick and simple. Drawback : shuffled ?
+		var imageDb = {};
+		var streamRootEnpoint = "ws://"+window.location.hostname+":"+window.location.port;
+		var availableStream = [
+								{"name":"Media Stream","url":streamRootEnpoint+"/media"},
+								{"name":"User Stream","url": streamRootEnpoint+"/user"}
+							  ];
+
+		var currentStream = availableStream[0]['url']
+		// Socket  
+		var socket = null;
+		var pauseMode = false;
+		var pauseBuffer = [];
+
+		var scoreLimit;
+
+		var sizeStep = (screen.width-50)/100;
+		
+		function buildOption() {
+			var selectElement = document.getElementById("streamId");
+			
+			for(var i=0; i < availableStream.length;i++) {
+				var stream = availableStream[i]
+				var option = document.createElement("option");
+				option.text = stream['name'];
+				option.value= stream['url'];
+				selectElement.add(option);
+			}
+			
+		}
+		
+		function buildOption() {
+			var selectElement = document.getElementById("streamId");
+			
+			for(var i=0; i < availableStream.length;i++) {
+				var stream = availableStream[i]
+				var option = document.createElement("option");
+				option.text = stream['name'];
+				option.value= stream['url'];
+				selectElement.add(option);
+			}
+			
+		}
+	    function updateScoreLimit() {
+
+			scoreLimit = Math.max(1,document.getElementById('limitScore').value)
+	    }
+		//
+		function triggerPauseMode(){
+			// If we click to desactivate the Pause Mode
+			if(!isPause.checked) {
+				// We theorically don't need to do this , but in case of ....
+				unpause();
+				pauseMode = false;	
+			}
+		}
+		function unpause(){
+			if(isPause.checked ) {
+				pauseMode = false;
+				for(var i =0; i<pauseBuffer.length;i++) {
+				
+					pushMedia(pauseBuffer.shift())
+				}
+			}
+		}
+		function pause() {
+			if(isPause.checked) {
+				pauseMode = true;
+			}
+		}
+
+		function changeStream() {
+		
+			document.getElementById("wrapper").innerHTML = '';
+			currentStream = document.getElementById('streamId').value;
+			console.log(currentStream)
+		}
+		function socketOnOpen() {
+			console.log("Connected to "+ this.url)
+		}
+		function socketOnClose() {
+			console.log("Disconnected from"+ this.url)
+		}
+		
+		function pushMedia(mediaData) {
+			if(document.getElementById(mediaData['hash']) === null) {
+				if(imageScore[mediaData['hash']] >= scoreLimit) {
+				document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><img title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'" src="'+mediaData['url']+'"/></a>');
+				}
+				
+			}
+		}
+
+		function sizeMedia(mediaData) {
+			if(document.getElementById(mediaData['hash']) !== null) {
+
+				var size = Math.min(screen.width*0.95, 50+ (imageScore[mediaData['hash']] *sizeStep));
+
+				document.getElementById(mediaData['hash']).style.height = size+"px"
+				document.getElementById(mediaData['hash']).style.width = size+"px"
+			}
+		}
+
+		function updateFilterMedia() {
+
+		}
+		function socketOnMessage(message) {
+			if(this.url === currentStream) {
+				var data = JSON.parse(message.data);
+
+				if(imageScore[data['hash']]  === undefined ) {
+					imageDb[this.url][data['hash']] = data;
+					imageScore[data['hash']] = 1;
+					
+				} else { 
+					imageScore[data['hash']] +=1;
+				}
+				if(!pauseMode) {
+					pushMedia(data)
+				} else {
+					pauseBuffer.push(data);
+				}
+				sizeMedia(data);
+			}
+		}
+
+		function startStreams() {
+			buildOption()
+			updateScoreLimit();
+			for(var i=0;i<availableStream.length;i++) {
+				
+				var stream = availableStream[i];
+
+				var streamSocket = new WebSocket(stream['url']);
+
+				imageDb[stream['url']]={};
+
+				streamSocket.onopen = socketOnOpen;
+				streamSocket.onmessage = socketOnMessage;
+				streamSocket.onclose = socketOnClose;
+			
+			}
+		}
+		//
+		function startWebsocket() {
+			var streamUrl = document.getElementById('streamId').value
+			socket = new WebSocket(streamUrl);
+
+			if(imageDb[streamUrl] === undefined) {
+				imageDb[streamUrl]={};
+			} else {
+				for( element in imageDb[streamUrl]){
+					data = imageDb[streamUrl][element];
+					document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+data['url']+'"><img id="'+data['hash']+'" src="'+data['url']+'"/></a>');
+					document.getElementById(data['hash']).style.height = 50+(imageScore[data['hash']] *10)+"px"
+					document.getElementById(data['hash']).style.width = 50+(imageScore[data['hash']] *10)+"px"
+				}
+			}
+			socket.onopen = function() {
+				console.log("Connected!");
+			}
+			socket.onmessage = function(e) {
+			
+				var data = JSON.parse(e.data);
+				if(imageScore[data['hash']]  === undefined) {
+					imageDb[streamUrl][data['hash']] = data;
+					imageScore[data['hash']] = 0;
+					
+				} else {
+					if (imageScore[data['hash']] ==5) {
+						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+data['url']+'"><img id="'+data['hash']+'" src="'+data['url']+'"/></a>')
+					}
+					if(document.getElementById(data['hash']) != null) {
+					document.getElementById(data['hash']).style.height = 50+(imageScore[data['hash']] *10)+"px"
+					document.getElementById(data['hash']).style.width = 50+(imageScore[data['hash']] *10)+"px"
+					}
+				 }
+				imageScore[data['hash']] +=1;
+
+			}
+			socket.onclose = function(e) {
+				console.log("Connection closed.");
+			}
+		};
+	
+		// window.onload = startWebsocket
+		window.onload = startStreams
+	</script>
+</head>
+<body>
+	<div class="container">
+		<header  onmouseover="unpause()" >
+			
+			<select onChange="changeStream();" id="streamId">
+			
+			</select> 
+				<input type="checkbox" id="isPause" value="Pause on Hover" onclick="triggerPauseMode()"/> Pause on Hover |
+				<input type="text" id="limitScore" value="5" size="2" onChange="updateScoreLimit()" /> Score Limit
+		</header>
+		<div class="row"><div class="col-12" id="wrapper" onmouseover="pause()" ></div></div>
+		<footer>
+			Mediamur from <a href="">@totetmatt</a> |  <!-- Not required, but appreciated. -->Design <a href="http://minimalcss.com">Minimal</a>
+		</footer>
+	</div>
+</body>
+</html>
