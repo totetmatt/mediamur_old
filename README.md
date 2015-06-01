@@ -7,16 +7,15 @@ Server & Simple Html Client to display media from a Twitter Stream.
 Grab the Mediamur jar at [http://matthieu-totet.fr/release/mediamur/mediamur.zip](http://matthieu-totet.fr/release/mediamur/mediamur.zip "http://matthieu-totet.fr/release/mediamur/mediamur.zip") or build it.
 
 
-Launch it throught the command `java -jar mediamur-0.0.1-RELEASE.jar`
+Launch it throught the command `java -jar mediamur-0.2.1-RELEASE.jar`
 
 The in-the-box configuration doesn't have stream filter and will use the sample stream api from twitter. Check the **streamquery.yml** part bellow to see how to have a filtered stream.
 
-It should have open a websocket entrypoint accessible at `http://localhost:8080/mediastream`
+It should have open a websocket entrypoints accessible at `http://localhost:8080/media` and `http://localhost:8080/user`.
 
 
 ### Run the Client
-The client is just an html page. You can just open it in you web browser by double clicking.
-
+Open your web browser and go to`http://localhost:8080/`.
 
 #Streamquery.yml
 By default, Streamquery is empty and the server will use the sample stream api. You can filter the stream by :
@@ -48,13 +47,7 @@ Nothing to change execpt that the entrypoint will be `http://<yourHostName>:8080
 You should make sure also that the `http://<yourHostName>:8080/mediastream` is accessible from where the other users will be (internet, local network etc..)
 
 ### Run the Client
-You will need to serve the html page via a html web server (nginx, apache , python SimpleHTTPServer module  etc... ).
-
-Just make sure that in this line in the `index.html `:
-
-    socket = new WebSocket("<url>");
-
-the `<url>` target the server that you launched. ( `http://<yourHostName>:8080/mediastream` e.g )
+The application serves automatically the web page at `http://<yourHostName>:8080/`
 
 #Dockerized version
 See [https://github.com/totetmatt/mediamur-docker](https://github.com/totetmatt/mediamur-docker)

@@ -11,12 +11,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import twitter4j.FilterQuery;
@@ -28,9 +26,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * 
  * @author Totetmatt Main class for Wallpic application
  */
-@ComponentScan
-@Controller
-@EnableAutoConfiguration
+@SpringBootApplication
 public class Server extends SpringBootServletInitializer {
 
 	private Log log = LogFactory.getLog(Server.class);
