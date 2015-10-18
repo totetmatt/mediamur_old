@@ -14,7 +14,7 @@ public class MediamurConfiguration {
 	private boolean saveImage = false;
 	private int imageScoreLimit = 1;
 	
-	private String saveDirectory = "./" + new Date().getTime();
+	private String saveDirectory = "./save/" + new Date().getTime();
 	
 	
 	public String getSaveDirectory() {
