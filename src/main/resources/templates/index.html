@@ -96,6 +96,8 @@
 		}
 		function socketOnClose() {
 			console.log("Disconnected from"+ this.url)
+			console.log("Reconnecting ");
+			startStream(this.url);
 		}
 		
 		function pushMedia(mediaData) {
@@ -140,67 +142,30 @@
 			}
 		}
 
-		function startStreams() {
+		function initApp() {
 			buildOption()
 			updateScoreLimit();
 			for(var i=0;i<availableStream.length;i++) {
 				
 				var stream = availableStream[i];
 
-				var streamSocket = new WebSocket(stream['url']);
+				
 
 				imageDb[stream['url']]={};
-
-				streamSocket.onopen = socketOnOpen;
-				streamSocket.onmessage = socketOnMessage;
-				streamSocket.onclose = socketOnClose;
+				startStream(stream['url']);
 			
 			}
 		}
 		//
-		function startWebsocket() {
-			var streamUrl = document.getElementById('streamId').value
-			socket = new WebSocket(streamUrl);
-
-			if(imageDb[streamUrl] === undefined) {
-				imageDb[streamUrl]={};
-			} else {
-				for( element in imageDb[streamUrl]){
-					data = imageDb[streamUrl][element];
-					document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+data['url']+'"><img id="'+data['hash']+'" src="'+data['url']+'"/></a>');
-					document.getElementById(data['hash']).style.height = 50+(imageScore[data['hash']] *10)+"px"
-					document.getElementById(data['hash']).style.width = 50+(imageScore[data['hash']] *10)+"px"
-				}
-			}
-			socket.onopen = function() {
-				console.log("Connected!");
-			}
-			socket.onmessage = function(e) {
-			
-				var data = JSON.parse(e.data);
-				if(imageScore[data['hash']]  === undefined) {
-					imageDb[streamUrl][data['hash']] = data;
-					imageScore[data['hash']] = 0;
-					
-				} else {
-					if (imageScore[data['hash']] ==5) {
-						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+data['url']+'"><img id="'+data['hash']+'" src="'+data['url']+'"/></a>')
-					}
-					if(document.getElementById(data['hash']) != null) {
-					document.getElementById(data['hash']).style.height = 50+(imageScore[data['hash']] *10)+"px"
-					document.getElementById(data['hash']).style.width = 50+(imageScore[data['hash']] *10)+"px"
-					}
-				 }
-				imageScore[data['hash']] +=1;
-
-			}
-			socket.onclose = function(e) {
-				console.log("Connection closed.");
-			}
-		};
+		function startStream(url){
+			var streamSocket = new WebSocket(url);
+			streamSocket.onopen = socketOnOpen;
+			streamSocket.onmessage = socketOnMessage;
+			streamSocket.onclose = socketOnClose;
+		}
 	
 		// window.onload = startWebsocket
-		window.onload = startStreams
+		window.onload = initApp
 	</script>
 </head>
 <body>
