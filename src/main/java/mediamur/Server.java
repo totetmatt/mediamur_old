@@ -2,11 +2,6 @@ package mediamur;
 
 import javax.annotation.PostConstruct;
 
-import mediamur.configuration.StreamQueryConfiguration;
-import mediamur.configuration.TwitterConfiguration;
-import mediamur.endpoint.MediaWsEndpoint;
-import mediamur.endpoint.UserWsEndpoint;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +12,11 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
+import mediamur.configuration.QueryStreamConfiguration;
+import mediamur.configuration.StreamQueryConfiguration;
+import mediamur.configuration.TwitterConfiguration;
+import mediamur.endpoint.MediaWsEndpoint;
+import mediamur.endpoint.UserWsEndpoint;
 import twitter4j.FilterQuery;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
@@ -30,7 +30,7 @@ import twitter4j.conf.ConfigurationBuilder;
 public class Server extends SpringBootServletInitializer {
 
 	private Log log = LogFactory.getLog(Server.class);
-	
+
 	@Autowired
 	private UserWsEndpoint userWsEndpoint;
 
@@ -40,8 +40,7 @@ public class Server extends SpringBootServletInitializer {
 	@Autowired
 	private TwitterConfiguration twitterConfiguration;
 
-	@Autowired
-	private StreamQueryConfiguration streamConfiguration;
+	@Autowired QueryStreamConfiguration queryStreamConfiguration;
 
 	@PostConstruct
 	void postConstruct() {
@@ -53,26 +52,41 @@ public class Server extends SpringBootServletInitializer {
 		cb.setDebugEnabled(false);
 		cb.setPrettyDebugEnabled(false);
 		cb.setOAuthAccessToken(twitterConfiguration.getOAuthAccessToken());
-		cb.setOAuthAccessTokenSecret(twitterConfiguration
-				.getOAuthAccessTokenSecret());
-		TwitterStream twitterStream = new TwitterStreamFactory(cb.build())
-				.getInstance();
+		cb.setOAuthAccessTokenSecret(twitterConfiguration.getOAuthAccessTokenSecret());
+		TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+		
 		twitterStream.addListener(mediaWsEndpoint);
 		twitterStream.addListener(userWsEndpoint);
-		FilterQuery fq = new FilterQuery();
-		if (streamConfiguration.isEmpty()) {
-			log.info("Empty query, use sample");
+
+		if (queryStreamConfiguration.getFirehose().isUseFirehose()) {
+			log.info("Use Firehose");
+			twitterStream.firehose(queryStreamConfiguration.getFirehose().getCount());
+
+		} else if (queryStreamConfiguration.getLinkstream().isUseLinkStream()) {
+			log.info("Use Link Stream");
+			twitterStream.links(queryStreamConfiguration.getLinkstream().getCount());
+
+		} else if (queryStreamConfiguration.getSitestream().isUseSiteStream()) {
+			log.info("Use Site Stream");
+			twitterStream.site(queryStreamConfiguration.getSitestream().isWithFollowings(),
+					queryStreamConfiguration.filterQueryUsers());
+
+		} else if (queryStreamConfiguration.getSampleStream().isUseSampleStream()) {
+			log.info("Use Sample Stream");
 			twitterStream.sample();
+
 		} else {
-			log.info("Non Empty Search");
-			fq = new FilterQuery();
-
-			fq.track(streamConfiguration.generateWordsTrack());
-			fq.follow(streamConfiguration.generateFollowTrack());
-			fq.locations(streamConfiguration.generateLocation());
-
+			log.info("Use Filter");
+			FilterQuery fq = new FilterQuery();
+			if (!queryStreamConfiguration.getWords().isEmpty()) {
+				fq.track(queryStreamConfiguration.filterQueryWords());
+			}
+			if (!queryStreamConfiguration.getUsers().isEmpty()) {
+				fq.follow(queryStreamConfiguration.filterQueryUsers());
+			}
 			twitterStream.filter(fq);
 		}
+
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -80,8 +94,7 @@ public class Server extends SpringBootServletInitializer {
 	}
 
 	@Override
-	protected SpringApplicationBuilder configure(
-			final SpringApplicationBuilder application) {
+	protected SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
 		return application.sources(Server.class);
 	}
 
