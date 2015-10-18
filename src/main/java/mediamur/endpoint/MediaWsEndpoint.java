@@ -1,8 +1,12 @@
 package mediamur.endpoint;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
-import java.security.NoSuchAlgorithmException;
+import java.net.URLConnection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,19 +17,21 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import mediamur.ImageData;
-
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import mediamur.ImageData;
+import mediamur.configuration.MediamurConfiguration;
 import twitter4j.MediaEntity;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 
@@ -38,9 +44,11 @@ public class MediaWsEndpoint implements StatusListener {
 
 	private HashMap<String, String> urlHash = new HashMap<String, String>();
 
+	@Autowired
+	MediamurConfiguration mediamurConfiguration;
+
 	// http://stackoverflow.com/questions/18481597/how-to-get-an-existing-websocket-instance
-	private static final Set<Session> sessions = Collections
-			.synchronizedSet(new HashSet<Session>());
+	private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
 	public static Set<Session> getSessions() {
 		return sessions;
@@ -72,19 +80,30 @@ public class MediaWsEndpoint implements StatusListener {
 
 	}
 
-	private String imhash(String url) throws IOException,
-			NoSuchAlgorithmException {
-		return org.apache.commons.codec.digest.DigestUtils.md5Hex(new URL(url)
-				.openStream());
-	}
-
 	public void onStatus(Status status) {
 		for (MediaEntity me : status.getMediaEntities()) {
 			if (!urlHash.containsKey(me.getMediaURL())) {
 				try {
-					urlHash.put(me.getMediaURL(), imhash(me.getMediaURL()));
-				} catch (NoSuchAlgorithmException e) {
-					log.error(e);
+
+					URL imageUrl = new URL(me.getMediaURL() + ":large");
+
+					URLConnection connectionBig = imageUrl.openConnection();
+					InputStream imageData = connectionBig.getInputStream();
+
+					// Free MD5 from Twitter
+					urlHash.put(me.getMediaURL(), connectionBig.getHeaderField("Content-MD5"));
+					if (mediamurConfiguration.isSaveImage()) {
+						String fileDestination = FilenameUtils.concat(mediamurConfiguration.getSaveDirectory(),
+								FilenameUtils.getName(me.getMediaURL()));
+						OutputStream out = new BufferedOutputStream(new FileOutputStream(fileDestination));
+
+						for (int b; (b = imageData.read()) != -1;) {
+							out.write(b);
+						}
+						out.close();
+						imageData.close();
+					}
+
 				} catch (IOException e) {
 					log.error(e);
 				}
@@ -109,14 +128,19 @@ public class MediaWsEndpoint implements StatusListener {
 
 	}
 
-	public void onTrackLimitationNotice(int arg0) {}
+	public void onTrackLimitationNotice(int arg0) {
+	}
 
-	public void onException(Exception arg0) {}
+	public void onException(Exception arg0) {
+	}
 
-	public void onDeletionNotice(StatusDeletionNotice arg0) {}
+	public void onDeletionNotice(StatusDeletionNotice arg0) {
+	}
 
-	public void onScrubGeo(long arg0, long arg1) {}
+	public void onScrubGeo(long arg0, long arg1) {
+	}
 
-	public void onStallWarning(StallWarning arg0) {}
+	public void onStallWarning(StallWarning arg0) {
+	}
 
 }

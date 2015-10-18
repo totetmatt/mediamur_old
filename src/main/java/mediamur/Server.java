@@ -1,5 +1,7 @@
 package mediamur;
 
+import java.io.File;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
@@ -12,6 +14,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
+import mediamur.configuration.MediamurConfiguration;
 import mediamur.configuration.TwitterConfiguration;
 import mediamur.configuration.querystream.QueryStreamConfiguration;
 import mediamur.endpoint.MediaWsEndpoint;
@@ -40,6 +43,9 @@ public class Server extends SpringBootServletInitializer {
 	private TwitterConfiguration twitterConfiguration;
 
 	@Autowired QueryStreamConfiguration queryStreamConfiguration;
+	
+	@Autowired
+	MediamurConfiguration mediamurConfiguration;
 
 	@PostConstruct
 	void postConstruct() {
@@ -85,9 +91,18 @@ public class Server extends SpringBootServletInitializer {
 			}
 			twitterStream.filter(fq);
 		}
-
+		if(mediamurConfiguration.isSaveImage()) {
+			createImageSaveDirectory(mediamurConfiguration.getSaveDirectory());
+		}
+	
 	}
 
+	public void createImageSaveDirectory(String path){
+		File theDir = new File(path);
+		if(!theDir.exists()) {
+			theDir.mkdirs();
+		}
+	}
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(new Object[] { Server.class }, args);
 	}
