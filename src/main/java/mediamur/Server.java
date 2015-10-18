@@ -19,6 +19,7 @@ import mediamur.configuration.TwitterConfiguration;
 import mediamur.configuration.querystream.QueryStreamConfiguration;
 import mediamur.endpoint.MediaWsEndpoint;
 import mediamur.endpoint.UserWsEndpoint;
+import mediamur.utils.Place;
 import twitter4j.FilterQuery;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
@@ -88,6 +89,12 @@ public class Server extends SpringBootServletInitializer {
 			}
 			if (!queryStreamConfiguration.getUsers().isEmpty()) {
 				fq.follow(queryStreamConfiguration.filterQueryUsers());
+			}
+			if (!queryStreamConfiguration.getLocations().isEmpty()){
+				for(Place p:queryStreamConfiguration.getLocations()){
+					log.info(p.getSouthWestLong()+" "+p.getSouthWestLat());
+				}
+				fq.locations(queryStreamConfiguration.filterLocations());
 			}
 			twitterStream.filter(fq);
 		}

@@ -92,6 +92,19 @@ public class QueryStreamConfiguration {
     public String[] filterQueryWords() {
         return words.stream().toArray(String[]::new);
     }
+    
+    public double[][] filterLocations() {
+    	List<double[]> a = new ArrayList<double[]>();
+    	locations.stream().forEach((p) -> {
+    		a.add(new double[]{p.getSouthWestLong(),p.getSouthWestLat()});
+    		a.add(new double[]{p.getNorthEastLong(),p.getNorthEastLat()});
+    	});
+    	
+    
+    	double[][] returnArray = new double[a.size()][2];
+    	for(int i = 0; i < a.size(); i++){ returnArray[i] = a.get(i); };
+    	return 	returnArray;
+    }
 
     public long[] filterQueryUsers() {
         long[] list = new long[users.size()];
