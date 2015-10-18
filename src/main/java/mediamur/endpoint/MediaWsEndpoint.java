@@ -91,7 +91,7 @@ public class MediaWsEndpoint implements StatusListener {
 					InputStream imageData = connectionBig.getInputStream();
 
 					// Free MD5 from Twitter
-					urlHash.put(me.getMediaURL(), connectionBig.getHeaderField("Content-MD5"));
+					urlHash.put(me.getMediaURL() + ":large", connectionBig.getHeaderField("Content-MD5"));
 					if (mediamurConfiguration.isSaveImage()) {
 						String fileDestination = FilenameUtils.concat(mediamurConfiguration.getSaveDirectory(),
 								FilenameUtils.getName(me.getMediaURL()));
