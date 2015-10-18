@@ -110,8 +110,8 @@ public class MediaWsEndpoint implements StatusListener {
 			}
 			for (Session s : MediaWsEndpoint.getSessions()) {
 				ImageData d = new ImageData();
-				d.setUrl(me.getMediaURL());
-				d.setHash(urlHash.get(me.getMediaURL()));
+				d.setUrl(me.getMediaURL()+ ":large");
+				d.setHash(urlHash.get(me.getMediaURL()+ ":large"));
 				d.setId(me.getId() + "");
 				d.setLabel(status.getText());
 				ObjectMapper mapper = new ObjectMapper();
