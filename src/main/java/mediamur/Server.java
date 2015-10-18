@@ -12,8 +12,8 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import mediamur.configuration.QueryStreamConfiguration;
 import mediamur.configuration.TwitterConfiguration;
+import mediamur.configuration.querystream.QueryStreamConfiguration;
 import mediamur.endpoint.MediaWsEndpoint;
 import mediamur.endpoint.UserWsEndpoint;
 import twitter4j.FilterQuery;

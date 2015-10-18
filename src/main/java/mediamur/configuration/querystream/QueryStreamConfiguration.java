@@ -1,4 +1,4 @@
-package mediamur.configuration;
+package mediamur.configuration.querystream;
 
 
 import java.io.FileWriter;

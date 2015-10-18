@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Configuration
-@ConfigurationProperties(locations = { "file:./twitter.yml" }, prefix = "twitter")
+@ConfigurationProperties(prefix = "twitter")
 public class TwitterConfiguration {
 	@NotNull
 	private String OAuthConsumerKey;

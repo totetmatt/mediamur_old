@@ -1,4 +1,4 @@
-package mediamur.configuration;
+package mediamur.configuration.querystream;
 
 
 public class SampleStreamConfiguration {
