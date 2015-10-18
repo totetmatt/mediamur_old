@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import mediamur.configuration.QueryStreamConfiguration;
-import mediamur.configuration.StreamQueryConfiguration;
 import mediamur.configuration.TwitterConfiguration;
 import mediamur.endpoint.MediaWsEndpoint;
 import mediamur.endpoint.UserWsEndpoint;
