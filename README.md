@@ -28,9 +28,11 @@ sampleStream: {useSampleStream: false}
 
 ## Working in local
 ### Run the Server
-Grab the Mediamur jar at [https://github.com/totetmatt/mediamur/releases](https://github.com/totetmatt/mediamur/releases "https://github.com/totetmatt/mediamur/releases").
+Grab the latest Mediamur zip at [https://github.com/totetmatt/mediamur/releases](https://github.com/totetmatt/mediamur/releases "https://github.com/totetmatt/mediamur/releases").
 
-Launch it with the command `java -jar mediamur.jar`
+
+
+Unzip and launch via `start_mediamur.sh` (Unix/Mac) or `start_mediamur.bat`
 
 The in-the-box configuration doesn't have stream filter and will use the sample stream api from twitter. Modify the **streamquery.yml** to have a filtered stream with custom search.
 
