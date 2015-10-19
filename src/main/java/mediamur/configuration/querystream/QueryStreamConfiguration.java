@@ -90,7 +90,11 @@ public class QueryStreamConfiguration {
     }
 
     public String[] filterQueryWords() {
-        return words.stream().toArray(String[]::new);
+    	List<String> query= new ArrayList<>();
+    	query.addAll(words);
+    	this.users.stream().forEach(u -> query.add(u.getScreenName()));
+    	
+        return query.stream().toArray(String[]::new);
     }
     
     public double[][] filterLocations() {
