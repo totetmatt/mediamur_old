@@ -18,8 +18,8 @@
 		var imageDb = {};
 		var streamRootEnpoint = "ws://"+window.location.hostname+":"+window.location.port;
 		var availableStream = [
-								{"name":"Media Stream","url":"ws://"+ window.location.hostname+":8080/media"},
-								{"name":"User Stream","url": "ws://"+ window.location.hostname+":8080/user"}
+								{"name":"Media Stream","url":streamRootEnpoint+"/media"},
+								{"name":"User Stream","url": streamRootEnpoint+"/user"}
 							  ];
 
 		var currentStream = availableStream[0]['url']
