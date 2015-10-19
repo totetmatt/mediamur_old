@@ -4,16 +4,16 @@ Server & Simple Html Client to display media from a Twitter Stream.
 # How to ?
 ## Configuration
 ### application.properties
-
-| twitter.OAuthConsumerKey  | String  |Your Consumer Key|
-
-| twitter.OAuthConsumerSecret|String  |Your Consumer Secret |
-| twitter.OAuthAccessToken|String  |Your Access Token |
-| twitter.OAuthAccessTokenSecret|String  | Your Access Token Secret |
-| mediamur.pauseOnHover|Boolean  | When cursor is on picture, stop the scrolling of incoming images (can be changed on UI after) |
-| mediamur.imageScoreLimit|Integer  | Minimum image score before displayed (can be changed on UI after) |
-| mediamur.saveImage| Boolean  |Save the image in the filesystem |
-| mediamur.saveDirectory|String|Path to store the images if saveImage is enabled |
+| Property                       | Type    | Comment        |
+|------------------------------ | ------- | --------------- |
+| twitter.OAuthConsumerKey      | String  |Your Consumer Key|
+| twitter.OAuthConsumerSecret   | String  |Your Consumer Secret |
+| twitter.OAuthAccessToken      | String  |Your Access Token |
+| twitter.OAuthAccessTokenSecret| String  | Your Access Token Secret |
+| mediamur.pauseOnHover         | Boolean | When cursor is on picture, stop the scrolling of incoming images (can be changed on UI after) |
+| mediamur.imageScoreLimit      | Integer | Minimum image score before displayed (can be changed on UI after)|
+| mediamur.saveImage            | Boolean | Save the image in the filesystem |
+| mediamur.saveDirectory        | String  | Path to store the images if saveImage is enabled |
 
 ### streamquery.yml
 words:
