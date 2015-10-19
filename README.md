@@ -27,8 +27,7 @@ locations:
     - {"southWestLat":40.756761 ,"southWestLong":-73.989996 ,"northEastLat":40.762039,"northEastLong":-73.971516} 
 sampleStream: {useSampleStream: false}
 ```
-
-## Working in local
+## Run Mediamur
 ### Run the Server
 Grab the latest Mediamur zip at [https://github.com/totetmatt/mediamur/releases](https://github.com/totetmatt/mediamur/releases "https://github.com/totetmatt/mediamur/releases").
 
