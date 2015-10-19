@@ -1,6 +1,6 @@
 # Mediamur
 Server & Simple Html Client to display media from a Twitter Stream.
-
+![Mediamur Example ](./doc/MediaMur.gif)
 # How to ?
 ## Configuration
 ### application.properties
@@ -16,6 +16,7 @@ Server & Simple Html Client to display media from a Twitter Stream.
 | mediamur.saveDirectory        | String  | Path to store the images if saveImage is enabled |
 
 ### streamquery.yml
+```
 words:
     - words1
 users:
@@ -23,42 +24,18 @@ users:
 locations:
     - {"southWestLat":40.756761 ,"southWestLong":-73.989996 ,"northEastLat":40.762039,"northEastLong":-73.971516} 
 sampleStream: {useSampleStream: false}
-
+```
 
 ## Working in local
-###Run the Server
-Grab the Mediamur jar at [http://matthieu-totet.fr/release/mediamur/mediamur.zip](http://matthieu-totet.fr/release/mediamur/mediamur.zip "http://matthieu-totet.fr/release/mediamur/mediamur.zip") or build it.
+### Run the Server
+Grab the Mediamur jar at [https://github.com/totetmatt/mediamur/releases](https://github.com/totetmatt/mediamur/releases "https://github.com/totetmatt/mediamur/releases").
 
+Launch it with the command `java -jar mediamur.jar`
 
-Launch it throught the command `java -jar mediamur-0.2.1-RELEASE.jar`
-
-The in-the-box configuration doesn't have stream filter and will use the sample stream api from twitter. Check the **streamquery.yml** part bellow to see how to have a filtered stream.
-
-It should have open a websocket entrypoints accessible at `http://localhost:8080/media` and `http://localhost:8080/user`.
-
+The in-the-box configuration doesn't have stream filter and will use the sample stream api from twitter. Modify the **streamquery.yml** to have a filtered stream with custom search.
 
 ### Run the Client
-Open your web browser and go to`http://localhost:8080/`.
-
-# Streamquery.yml
-By default, Streamquery is empty and the server will use the sample stream api. You can filter the stream by :
-
-
-    words:
-        track:
-            - something
-            - to
-            - lookfor
-    user:
-        follow:
-            - totetmatt
-            - twitterdev
-    location:
-        place:
-            -Name;SouthWestLatitude,SouthWestLongitude;NorthEastLatitude,NorthEastLongitude
-            -Name;SouthWestLatitude,SouthWestLongitude;NorthEastLatitude,NorthEastLongitude
-  
-
+Open your web browser and go to `http://localhost:8080/`.
 
 ##Working in remote
 If you need that other people access to your stream, you'll need to makes some changes.
@@ -73,4 +50,4 @@ You should make sure also that the `http://<yourHostName>:8080/mediastream` is a
 The application serves automatically the web page at `http://<yourHostName>:8080/`
 
 #Dockerized version
-See [https://github.com/totetmatt/mediamur-docker](https://github.com/totetmatt/mediamur-docker)
+Soon
