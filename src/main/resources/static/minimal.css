@@ -104,4 +104,5 @@ tfoot { font-style: italic; }
 img {
     width: 50px;
     height: 50px;
+    border-top: 2px grey solid;
 }
