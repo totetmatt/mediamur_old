@@ -9,7 +9,7 @@ public class ImageData {
 	String id;
 	String hash;
 	String label;
-	
+	String type;
 	
 	public String getLabel() {
 		return label;
@@ -34,6 +34,12 @@ public class ImageData {
 	}
 	public void setHash(String hash) {
 		this.hash = hash;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

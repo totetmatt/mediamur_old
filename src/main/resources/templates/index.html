@@ -103,7 +103,13 @@
 		function pushMedia(mediaData) {
 			if(document.getElementById(mediaData['hash']) === null) {
 				if(imageScore[mediaData['hash']] >= scoreLimit) {
-				document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><img title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'" src="'+mediaData['url']+'"/></a>');
+					if(mediaData['type']==='photo') {
+						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><img title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'" src="'+mediaData['url']+'"/></a>');
+					} else {
+						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><video title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'"><source type="video/mp4" src="'+mediaData['url']+'"/> </video> </a>');
+						
+					}
+				
 				}
 				
 			}

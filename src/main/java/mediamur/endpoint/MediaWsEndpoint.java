@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mediamur.ImageData;
 import mediamur.configuration.MediamurConfiguration;
+import twitter4j.ExtendedMediaEntity;
 import twitter4j.MediaEntity;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -80,52 +82,65 @@ public class MediaWsEndpoint implements StatusListener {
 
 	}
 
-	public void onStatus(Status status) {
-		for (MediaEntity me : status.getMediaEntities()) {
-			if (!urlHash.containsKey(me.getMediaURL())) {
-				try {
+	private String mediaUrl(ExtendedMediaEntity me) {
+		if (me.getType().equals("photo")) {
+			return me.getMediaURL().concat(":large");
+		} else {
+			return me.getVideoVariants()[0].getUrl();
+		}
+	}
+    private void processMediaEntity(ExtendedMediaEntity me,Status status){
+    	String mediaUrl = mediaUrl(me);
+    	if (!urlHash.containsKey(mediaUrl)) {
+			try {
 
-					URL imageUrl = new URL(me.getMediaURL() + ":large");
+				URL imageUrl = new URL(mediaUrl);
 
-					URLConnection connectionBig = imageUrl.openConnection();
-					InputStream imageData = connectionBig.getInputStream();
+				URLConnection connectionBig = imageUrl.openConnection();
+				InputStream imageData = connectionBig.getInputStream();
 
-					// Free MD5 from Twitter
-					urlHash.put(me.getMediaURL() + ":large", connectionBig.getHeaderField("Content-MD5"));
-					if (mediamurConfiguration.isSaveImage()) {
-						String fileDestination = FilenameUtils.concat(mediamurConfiguration.getSaveDirectory(),
-								FilenameUtils.getName(me.getMediaURL()));
-						OutputStream out = new BufferedOutputStream(new FileOutputStream(fileDestination));
+				// Free MD5 from Twitter
+				urlHash.put(mediaUrl, connectionBig.getHeaderField("Content-MD5"));
+				
+				
+				if (mediamurConfiguration.isSaveMedia()) {
+					String fileDestination = FilenameUtils.concat(mediamurConfiguration.getSaveDirectory(),
+							FilenameUtils.getName(mediaUrl));
+					OutputStream out = new BufferedOutputStream(new FileOutputStream(fileDestination));
 
-						for (int b; (b = imageData.read()) != -1;) {
-							out.write(b);
-						}
-						out.close();
-						imageData.close();
+					for (int b; (b = imageData.read()) != -1;) {
+						out.write(b);
 					}
-
-				} catch (IOException e) {
-					log.error(e);
-				}
-			}
-			for (Session s : MediaWsEndpoint.getSessions()) {
-				ImageData d = new ImageData();
-				d.setUrl(me.getMediaURL()+ ":large");
-				d.setHash(urlHash.get(me.getMediaURL()+ ":large"));
-				d.setId(me.getId() + "");
-				d.setLabel(status.getText());
-				ObjectMapper mapper = new ObjectMapper();
-				String value;
-				try {
-					value = mapper.writeValueAsString(d);
-					s.getAsyncRemote().sendText(value);
-				} catch (JsonProcessingException e) {
-					log.error(e);
+					out.close();
+					imageData.close();
 				}
 
+			} catch (IOException e) {
+				log.error(e);
 			}
 		}
+		for (Session s : MediaWsEndpoint.getSessions()) {
+			ImageData d = new ImageData();
+			d.setUrl(mediaUrl);
+			d.setHash(urlHash.get(mediaUrl));
+			d.setId(me.getId() + "");
+			d.setLabel(status.getText());
+			d.setType(me.getType());
+			ObjectMapper mapper = new ObjectMapper();
+			String value;
+			try {
+				value = mapper.writeValueAsString(d);
+				s.getAsyncRemote().sendText(value);
+			} catch (JsonProcessingException e) {
+				log.error(e);
+			}
 
+		}
+    }
+	public void onStatus(Status status) {
+		Arrays.asList(status.getExtendedMediaEntities())
+		.parallelStream()
+		.forEach(me->this.processMediaEntity(me, status));
 	}
 
 	public void onTrackLimitationNotice(int arg0) {

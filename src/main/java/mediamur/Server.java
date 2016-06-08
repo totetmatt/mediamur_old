@@ -98,7 +98,7 @@ public class Server extends SpringBootServletInitializer {
 			}
 			twitterStream.filter(fq);
 		}
-		if(mediamurConfiguration.isSaveImage()) {
+		if(mediamurConfiguration.isSaveMedia()) {
 			createImageSaveDirectory(mediamurConfiguration.getSaveDirectory());
 		}
 	

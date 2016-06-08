@@ -19,11 +19,11 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 public class WebsocketSpringBootConfigurator {
 
     @Bean
-    public MediaWsEndpoint echoEndpoint() {
+    public MediaWsEndpoint mediaWsEndpoint() {
         return new MediaWsEndpoint();
     }
     @Bean
-    public UserWsEndpoint echoEndpointw() {
+    public UserWsEndpoint userWsEndpoint() {
         return new UserWsEndpoint();
     }
     @Bean

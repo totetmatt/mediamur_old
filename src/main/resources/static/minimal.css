@@ -101,8 +101,16 @@ tfoot { font-style: italic; }
 		color: #000 !important;
 	}
 }
-img {
+img  {
     width: 50px;
     height: 50px;
-    border-top: 2px grey solid;
+    border-top: 1px #ff0000 solid;
+}
+video {
+	display:inline;
+	
+	margin:0px;
+	width: 50px;
+    height: 50px;
+    border-top: 1px #00ff00 solid;
 }

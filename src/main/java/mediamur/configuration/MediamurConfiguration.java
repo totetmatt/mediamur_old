@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "mediamur")
 public class MediamurConfiguration {
 	private boolean pauseOnHover = false;
-	private boolean saveImage = false;
+	private boolean saveMedia = false;
 	private int imageScoreLimit = 1;
 	
 	private String saveDirectory = "./save/" + new Date().getTime();
@@ -29,11 +29,11 @@ public class MediamurConfiguration {
 	public void setPauseOnHover(boolean pauseOnHover) {
 		this.pauseOnHover = pauseOnHover;
 	}
-	public boolean isSaveImage() {
-		return saveImage;
+	public boolean isSaveMedia() {
+		return saveMedia;
 	}
-	public void setSaveImage(boolean saveImage) {
-		this.saveImage = saveImage;
+	public void setSaveMedia(boolean saveMedia) {
+		this.saveMedia = saveMedia;
 	}
 	public int getImageScoreLimit() {
 		return imageScoreLimit;
