@@ -6,6 +6,7 @@ package mediamur;
  */
 public class ImageData {
 	String url;
+	String previewUrl;
 	String id;
 	String hash;
 	String label;
@@ -41,5 +42,12 @@ public class ImageData {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getPreviewUrl() {
+		return previewUrl;
+	}
+	public void setPreviewUrl(String previewUrl) {
+		this.previewUrl = previewUrl;
+	}
+	
 	
 }

@@ -104,9 +104,11 @@
 			if(document.getElementById(mediaData['hash']) === null) {
 				if(imageScore[mediaData['hash']] >= scoreLimit) {
 					if(mediaData['type']==='photo') {
-						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><img title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'" src="'+mediaData['url']+'"/></a>');
+						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['previewUrl']+'"><img class="photo" title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'" src="'+mediaData['previewUrl']+'"/></a>');
 					} else {
-						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><video title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'"><source type="video/mp4" src="'+mediaData['url']+'"/> </video> </a>');
+						document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><img class="video" title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'" src="'+mediaData['previewUrl']+'"/></a>');
+						
+						//document.getElementById("wrapper").insertAdjacentHTML('afterbegin', '<a target="_blank" href="'+mediaData['url']+'"><video title="'+mediaData['label'].replace(/\"/g,'')+'"  id="'+mediaData['hash']+'"><source type="video/mp4" src="'+mediaData['url']+'"/> </video> </a>');
 						
 					}
 				
