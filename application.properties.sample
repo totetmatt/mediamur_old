@@ -3,4 +3,7 @@ twitter.OAuthConsumerSecret=TWITTER_OAUTHCONSUMERSECRET
 twitter.OAuthAccessToken=TWITTER_OAUTHACCESSTOKEN
 twitter.OAuthAccessTokenSecret=TWITTER_OAUTHACCESSTOKENSECRET
 
+mediamur.pauseOnHover=false
+mediamur.imageScoreLimit=1
+mediamur.saveMedia=false
 server.port = 8080

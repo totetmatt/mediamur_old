@@ -4,3 +4,4 @@ target/
 .settings/
 application.properties
 streamquery.yml
+/settings.xml

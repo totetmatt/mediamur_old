@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import mediamur.ImageData;
 import mediamur.configuration.MediamurConfiguration;
 import twitter4j.ExtendedMediaEntity;
+import twitter4j.ExtendedMediaEntity.Variant;
 import twitter4j.MediaEntity;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -86,7 +87,15 @@ public class MediaWsEndpoint implements StatusListener {
 		if (me.getType().equals("photo")) {
 			return me.getMediaURL().concat(":large");
 		} else {
-			return me.getVideoVariants()[0].getUrl();
+			String url="X";
+			int bitrate = 0;
+			for(Variant v:me.getVideoVariants()){			
+				if(v.getContentType().equals("video/mp4") && bitrate<=v.getBitrate()){
+					bitrate=v.getBitrate();
+					url=v.getUrl();
+				}
+			}
+			return url;
 		}
 	}
     private void processMediaEntity(ExtendedMediaEntity me,Status status){

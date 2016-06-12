@@ -9,10 +9,6 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.nodes.Tag;
-import org.yaml.snakeyaml.representer.Representer;
 
 import mediamur.utils.Place;
 import mediamur.utils.User;
@@ -168,16 +164,4 @@ public class QueryStreamConfiguration {
         return new JsonQueryStreamConfiguration(this);
     }
 
-    public void save() {
-        Representer representer = new Representer();
-
-        representer.addClassTag(QueryStreamConfiguration.class, Tag.MAP);
-        Yaml yaml = new Yaml(representer, new DumperOptions());
-        try {
-            yaml.dump(this, new FileWriter("./streamquery.yml"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 }

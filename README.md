@@ -12,7 +12,7 @@ Server & Simple Html Client to display media from a Twitter Stream.
 | twitter.OAuthAccessTokenSecret| String  | Your Access Token Secret |
 | mediamur.pauseOnHover         | Boolean | When cursor is on picture, stop the scrolling of incoming images (can be changed on UI after) |
 | mediamur.imageScoreLimit      | Integer | Minimum image score before displayed (can be changed on UI after)|
-| mediamur.saveImage            | Boolean | Save the image in the filesystem |
+| mediamur.saveMedia          | Boolean | Save the image in the filesystem |
 | mediamur.saveDirectory        | String  | Path to store the images if saveImage is enabled |
 
 ### streamquery.yml
