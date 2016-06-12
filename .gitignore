@@ -5,3 +5,4 @@ target/
 application.properties
 streamquery.yml
 /settings.xml
+do_release.sh

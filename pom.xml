@@ -3,7 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.webcom</groupId>
 	<artifactId>mediamur</artifactId>
-	<version>0.4.0</version>
+	<properties>
+     <mediamur.version>0.4.0</mediamur.version>
+  	</properties>
+	<version>${mediamur.version}</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
