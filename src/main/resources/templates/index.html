@@ -31,7 +31,7 @@
 		var scoreLimit;
 
 		var sizeStep = (screen.width-50)/100;
-		
+		var mediaFilter = "none";
 		function buildOption() {
 			var selectElement = document.getElementById("streamId");
 			
@@ -128,8 +128,9 @@
 		}
 
 		function updateFilterMedia() {
-
+			
 		}
+	
 		function socketOnMessage(message) {
 			if(this.url === currentStream) {
 				var data = JSON.parse(message.data);
@@ -142,7 +143,16 @@
 					imageScore[data['hash']] +=1;
 				}
 				if(!pauseMode) {
-					pushMedia(data)
+					if(document.getElementById("no_filter").checked) {
+						pushMedia(data)	
+					} else {
+						if(data['type']==='photo' && document.getElementById("filter_image").checked){
+							pushMedia(data)
+						} else if(data['type'] !== 'photo' && document.getElementById("filter_video").checked) {
+							pushMedia(data)
+						}
+					}
+					
 				} else {
 					pauseBuffer.push(data);
 				}
@@ -174,6 +184,7 @@
 	
 		// window.onload = startWebsocket
 		window.onload = initApp
+		
 	</script>
 </head>
 <body>
@@ -184,6 +195,9 @@
 			
 			</select> 
 				<input type="checkbox" {{#pauseOnHover}} checked="true" {{/pauseOnHover}} id="isPause" value="Pause on Hover" onclick="triggerPauseMode()"/> Pause on Hover |
+				  <input id="no_filter" checked type="radio" name="filter" value="none" /> No Type Filter 
+				  <input id="filter_image" type="radio" name="filter" value="onlyImage" /> Only Images
+				  <input id="filter_video" type="radio" name="filter" value="onlyVideo" /> Only Videos
 				<input type="text" id="limitScore" value="{{imageScoreLimit}}" size="2" onChange="updateScoreLimit()" /> Score Limit
 		</header>
 		<div class="row"><div class="col-12" id="wrapper" onmouseover="pause()" ></div></div>
